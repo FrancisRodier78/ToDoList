@@ -32,8 +32,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $password = $encoder->encodePassword($user, $user->getPassword());
-            $roles = [];
-            $roles[] = 'ROLE_USER';
+            $roles = $user->getRoles();
 
             $user->setPassword($password)
                  ->setRoles($roles);
@@ -52,15 +51,18 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function editAction(User $user, Request $request)
+    public function editAction(User $user, Request $request, UserPasswordEncoderInterface $encoder)
     {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
+            $password = $encoder->encodePassword($user, $user->getPassword());
+            $roles = $user->getRoles();
+
+            $user->setPassword($password)
+                ->setRoles($roles);
 
             $this->getDoctrine()->getManager()->flush();
 

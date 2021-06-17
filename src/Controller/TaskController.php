@@ -12,20 +12,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/tasks/todo", name="task_list_to_do")
+     * @Route("/tasks/todo", name="task_list")
      */
-    public function listActionToDo()
+    public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => '0', 'author' => $this->getUser()]), 'isDone' => '0']);
-    }
-
-    /**
-     * @Route("/tasks/finish", name="task_list_finish")
-     */
-    public function listActionFinish()
-    {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => '1', 'author' => $this->getUser()]), 'isDone' => '1']);
-    }
+        return $this->render('task/list.html.twig', [
+            'author' => $this->getUser(),
+            'tasksToDo' => $this->getDoctrine()->getRepository('App:Task')->findBy([
+                'isDone' => '0', 
+                'author' => $this->getUser()]), 
+            'isDoneToDo' => '0',
+            'tasksFinish' => $this->getDoctrine()->getRepository('App:Task')->findBy([
+                'isDone' => '1', 
+                'author' => $this->getUser()]), 
+            'isDoneFinish' => '1',
+            'tasksAnonyme' => $this->getDoctrine()->getRepository('App:Task')->findBy([
+                'author' => $this->getDoctrine()->getRepository('App:User')->findBy(['username' => 'Anonymous']),
+            ]), 
+        ]);
+    } 
 
     /**
      * @Route("/tasks/create", name="task_create")
