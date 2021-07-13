@@ -4,12 +4,11 @@ namespace App\Tests\Entity;
 
 use App\Entity\Task;
 use App\Entity\User;
-use PHPUnit\Framework\TestCase;
+use App\Tests\DataFixtures\DataFixtureTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Validator\ConstraintViolation;
 
-class UserTest extends TestCase
+class UserTest extends DataFixtureTestCase
 {
     public function testGetId()
     {
@@ -31,15 +30,13 @@ class UserTest extends TestCase
         static::assertEquals($user->getPassword(), 'Test password');
     }
 
-    /*
     public function testGetSetEmail()
     {
         $user = new User();
         $user->setEmail('Test email');
         static::assertEquals($user->getEmail(), 'Test email');
     }
-    */
-
+    
     public function testGetAddTask()
     {
         $user = new User();
@@ -80,5 +77,42 @@ class UserTest extends TestCase
         $user = new User();
         $user->setRoles(['ROLE_ADMIN']);
         static::assertEquals($user->getRoles(), ['ROLE_ADMIN']);
+    }
+
+
+
+    public function getEntity(): User
+    {
+        return (new User())
+            ->setUsername('Test Name')
+            ->setEmail('Test_email@sym.fr');
+    }
+
+    public function getEntity2(): User
+    {
+        return (new User())
+            ->setUsername('Test Name 2');
+    }
+
+    public function assertHasErrors(User $user, int $number = 0)
+    {
+        self::bootKernel();
+        $errors = self::$container->get('validator')->validate($user);
+        $messages = [];
+        /** @var ConstraintViolation $error */
+        foreach($errors as $error) {
+            $messages[] = $error->getPropertyPath() . ' => ' . $error->getMessage();
+        }
+        $this->assertCount($number, $errors, implode(', ', $messages));
+    }
+
+    public function testValidEntity()
+    {
+        $this->assertHasErrors($this->getEntity(), 0);
+    }
+    
+    public function testWrongEmail()
+    {
+        $this->assertHasErrors($this->getEntity()->setEmail('Test email'), 1);
     }
 }
