@@ -10,6 +10,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+use Faker\Factory;
+
 class TestFixtures extends Fixture implements FixtureGroupInterface
 {
 
@@ -115,5 +117,7 @@ class TestFixtures extends Fixture implements FixtureGroupInterface
           $metadata = $manager->getClassMetadata(User::class);
           $metadata->setIdGenerator(new \Doctrine\ORM\Id\IdentityGenerator());
           $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_IDENTITY);
-    }
+
+     }
+
 }

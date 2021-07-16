@@ -46,7 +46,8 @@ class AppFixtures extends Fixture
         $roles = [];
         $roles[] = 'ROLE_USER';
 
-        $user->setUsername($userAnonymous)
+        $user->setId(-1)
+             ->setUsername($userAnonymous)
              ->setPassword($hash)
              ->setEmail($faker->email)
              ->setRoles($roles);
@@ -87,12 +88,14 @@ class AppFixtures extends Fixture
         // Gestion des tâches anonymes
         for ($i=0; $i < 4; $i++) { 
             $task = new Task;
+            $user = $users[1];
 
             $title = $faker->sentence(3);
             $content = $faker->sentence(7);
 
             $task->setTitle($title)
-                 ->setContent($content);
+                 ->setContent($content)
+                 ->setAuthor($user);
 
             $manager->persist($task);
         }

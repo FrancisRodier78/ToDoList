@@ -2,34 +2,38 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
-use Doctrine\Persistence\ObjectManager;
 use App\Tests\DataFixtures\DataFixtureTestCase;
 
 class UserControllerTest extends DataFixtureTestCase
 {
-/*    public function testDoubleEmail(ObjectManager $manager)
+    public function testDoubleEmail()
     {
-        // Simple UserBis avec une acresse email déjà enregistée
-        // attente d'une réponse sur cette uniqueentity
-        $user = new User();
-        $user->setId(3)
-             ->setUsername('userBis')
-             ->setEmail('user@example.org')
-             ->setPassword('test')
-             ->setRoles(['ROLE_USER'])
-        ;
-        $manager->persist($user);
-        $this->addReference('user-bis', $user);
+        $securityControllerTest = new SecurityControllerTest();
+        $client = $securityControllerTest->testLoginAsAdmin();
 
-        $manager->flush();
+        $crawler = $client->request('GET', '/users/create');
+        static::assertSame(200, $client->getResponse()->getStatusCode());
 
-        var_dump($client->getResponse()->getStatusCode());
-        die;
+        // Test 
+        static::assertSame(1, $crawler->filter('input[name="user[username]"]')->count());
+        static::assertSame(1, $crawler->filter('input[name="user[password][first]"]')->count());
+        static::assertSame(1, $crawler->filter('input[name="user[password][second]"]')->count());
+        static::assertSame(1, $crawler->filter('input[name="user[email]"]')->count());
+        static::assertSame(2, $crawler->filter('input[name="user[roles][]"]')->count());
 
-        //static::assertSame(???, $client->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('Ajouter')->form();
+        $form['user[username]'] = 'userBis';
+        $form['user[password][first]'] = 'test';
+        $form['user[password][second]'] = 'test';
+        $form['user[email]'] = 'user@example.org';
+        $form['user[roles][0]']->tick();
+        $client->submit($form);
+        //var_dump($client->getResponse()->getStatusCode());
+        //die;
+        //static::assertCount(200, $client->getResponse()->getStatusCode());
+        static::assertResponseRedirects('/users/create', 200, 'This value is already used.');
     }
-*/
+
     public function testListActionWithoutLogin()
     {
         // If the user isn't logged, should redirect to the login page
