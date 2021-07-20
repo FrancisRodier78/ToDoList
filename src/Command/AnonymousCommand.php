@@ -38,7 +38,7 @@ class AnonymousCommand extends Command
 
         //, UserRepository $repo1, TaskRepository $repo2
         $repo1 = $this->manager->getRepository(User::class);
-        $user = $repo1->findOneBy(['username' => 'Anonymous']);
+        $user = $repo1->findOneBy(['username' => 'anonymous']);
 
         $repo2 = $this->manager->getRepository(Task::class);
         $tasks = $repo2->findall(['author' => null]);

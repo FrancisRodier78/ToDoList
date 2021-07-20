@@ -28,10 +28,7 @@ class UserControllerTest extends DataFixtureTestCase
         $form['user[email]'] = 'user@example.org';
         $form['user[roles][0]']->tick();
         $client->submit($form);
-        //var_dump($client->getResponse()->getStatusCode());
-        //die;
-        //static::assertCount(200, $client->getResponse()->getStatusCode());
-        static::assertResponseRedirects('/users/create', 200, 'This value is already used.');
+        static::assertStringContainsString('This value is already used.', $client->getResponse()->getContent());
     }
 
     public function testListActionWithoutLogin()

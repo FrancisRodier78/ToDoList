@@ -98,6 +98,15 @@ class TestFixtures extends Fixture implements FixtureGroupInterface
           ;
           $manager->persist($task);
 
+
+          // Tâche créer par null
+          $task = new Task();
+          $task->setId(5) 
+               ->setTitle('Test user null')
+               ->setContent('Tâche utilisé pour les tests')
+          ;
+          $manager->persist($task);
+
           // Desactive l'autoincrement des id
           $metadata = $manager->getClassMetadata(Task::class);
           $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
