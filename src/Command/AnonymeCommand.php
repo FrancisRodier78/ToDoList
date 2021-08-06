@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AnonymeCommand extends Command
 {
     // the name of the command (the part after "bin/console")
+    // La commande ne marche qu'en environnement de dev
     protected static $defaultName = 'app:anonyme';
 
     //protected EntityManagerInterface $manager;
